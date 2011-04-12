@@ -1,0 +1,55 @@
+# ganeti puppet module #
+
+Installs ganeti and supporting software.
+
+This module was written for Debian.
+
+## Classes ##
+
+* ganeti
+* ganeti::hooks
+* ganeti::drbd
+* ganeti::xen
+* ganeti::xenbridge
+
+### ganeti ###
+
+This is one of the two classes that are actually supposed to be included directly. Besides
+ganeti2, it will ensure a few configurations are correct, and it will install both xen and
+drbd. It will also reboot the server once, to make sure drbd is built to the right kernel.
+
+It will configure the interface in BRIDGE mode.
+
+This class replaces a rather long wiki entry here on how to install ganeti correctly, with
+quite a few items in the checklist.
+
+### ganeti::hooks ###
+
+This will push a set of hooks we use here by default. It will make use of extdata configured
+in the way specified by my "users" module, so that administrators are automatically created
+and their passwords set. Most of the hooks are provided as static files, but a couple are
+defined through templates. These templates make use of a few variables that must be set:
+
+    * `$dnssearch`: array of dns search entry on new VMs
+    * `$nameservers`: array of ip for name servers on new VMs
+    * `$zabbixserver`: ip address of the zabbix server
+
+Beyond these, extdata must be configured with administrator account entries as per my
+users module.
+
+
+### drbd ###
+
+Installs drbd, which requires a series of chained steps. This is included by the ganeti class.
+
+### xen ###
+
+Installs the xen kernel and reboots if necessary. It creates some symlinks, and make
+some adjustments to grub entries. It is not compatible with squeeze's default grub.
+
+This is included by the ganeti class.
+
+### xenbridge ###
+
+Configure the interface to bridge mode. This is included by the ganeti class.
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ENV="/usr/bin/env"
+
+$ENV >> $TARGET/env_done
+
+echo $0 OK
+

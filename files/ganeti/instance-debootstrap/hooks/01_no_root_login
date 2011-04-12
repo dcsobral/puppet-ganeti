@@ -1,0 +1,10 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+SED="/bin/sed"
+PASSWD="$TARGET/etc/passwd"
+
+$SED -i '{s#root:x:0:0:root:/root:/bin/bash#root:!:0:0:root:/root:/bin/bash#}' $PASSWD
+
+echo $0 OK

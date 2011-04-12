@@ -1,0 +1,25 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+CAT="/bin/cat"
+
+# Default Locale - UTF-8
+$ECHO LANG="en_US.UTF-8" > $TARGET/etc/default/locale
+$CAT <<EOF >$TARGET/etc/locale.gen
+# This file lists locales that you wish to have built. You can find a list
+# of valid supported locales at /usr/share/i18n/SUPPORTED, and you can add
+# user defined locales to /usr/local/share/i18n/SUPPORTED. If you change
+# this file, you need to rerun locale-gen.
+
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+pt_BR ISO-8859-1
+pt_BR.UTF-8 UTF-8
+EOF
+# Generate locale for packages
+chroot "$TARGET" /usr/sbin/locale-gen
+
+echo $0 OK
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+
+# Vim Config
+$ECHO "sy on" > $TARGET/root/.vimrc
+
+echo $0 OK
+

@@ -1,0 +1,26 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+CAT="/bin/cat"
+
+# Source.list
+$CAT <<EOF > $TARGET/etc/apt/sources.list
+# mirror ebc local
+# deb proto host diretorio/subdir dist sections
+deb http://mirror.ebc/debian/${SUITE}/ ${SUITE} main contrib non-free
+deb http://mirror.ebc/debian/${SUITE}-security/ ${SUITE}/updates main contrib non-free
+deb http://mirror.ebc/debian/${SUITE}-volatile/ ${SUITE}/volatile main
+
+# local repository
+deb http://mirror.ebc/debian/ebc ${SUITE}-ebc contrib
+
+# original repos
+#deb http://ftp.br.debian.org/debian/ ${SUITE} main contrib non-free
+#deb http://security.debian.org/ ${SUITE}/updates main contrib non-free
+#deb http://volatile.debian.org/debian-volatile/ ${SUITE}/volatile main contrib non-free
+#deb http://backports.debian.org/debian-backports/ ${SUITE}-backports main
+EOF
+
+echo $0 OK
+

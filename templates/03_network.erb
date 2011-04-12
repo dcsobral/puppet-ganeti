@@ -1,0 +1,30 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+SEQ="/usr/bin/seq"
+CAT="/bin/cat"
+INTERFACES="$TARGET/etc/network/interfaces"
+GREP="/bin/grep"
+ENV="/usr/bin/env"
+CUT="/usr/bin/cut"
+
+let NIC_COUNT--
+
+for NIC in $($SEQ 0 $NIC_COUNT)
+do
+IP=$($ENV | $GREP NIC_${NIC}_IP | $CUT -d= -f2)
+$CAT << EOF >> $INTERFACES
+auto eth${NIC}
+iface eth${NIC} inet static
+	address $IP
+	netmask <%= netmask %>
+	gateway <%= defaultroute %>
+	dns-nameservers <%= nameservers.join(" ") %>
+	dns-search <%= dnssearch.join(" ") %>
+EOF
+done
+
+echo $0 OK
+

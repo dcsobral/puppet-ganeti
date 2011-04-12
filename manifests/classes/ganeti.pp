@@ -1,11 +1,5 @@
 class ganeti {
-    package { [
-            'firmware-qlogic',
-            'firmware-bnx2',
-            'ganeti2',
-        ]:
-        ensure => installed,
-    }
+    package { 'ganeti2': ensure => installed, }
 
     $hostline = inline_template('<%= ipaddress %>	<%= fqdn %> <%= hostname %>')
 

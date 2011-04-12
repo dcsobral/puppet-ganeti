@@ -1,0 +1,32 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+CAT="/bin/cat"
+ECHO="/bin/echo"
+MKDIR="/bin/mkdir"
+CHOWN="/bin/chown"
+SED="/bin/sed"
+PASSWD="$TARGET/etc/passwd"
+SHADOW="$TARGET/etc/shadow"
+GROUP="$TARGET/etc/group"
+SUDOERS="$TARGET/etc/sudoers"
+USERS=$($CAT /etc/ganeti/instance-debootstrap/hooks/users)
+PASSWORDS="/etc/ganeti/instance-debootstrap/hooks/passwords"
+DEFAULTPWD='*'
+INITID=1000
+
+for USER in $USERS
+do
+PASSWORD=$(${SED} -ne "/$USER/ s/.*:\(.*\)/\1/p" $PASSWORDS)
+$ECHO "$USER:x:$INITID:$INITID::/home/$USER:/bin/bash" >> $PASSWD
+$ECHO "$USER:x:$INITID:" >> $GROUP
+$ECHO "$USER:${PASSWORD:-$DEFAULTPWD}:14762:0:99999:7:::" >> $SHADOW
+$ECHO "$USER	ALL=(ALL) ALL" >> $SUDOERS
+$MKDIR -p $TARGET/home/$USER
+$CHOWN -R ${INITID}:${INITID} $TARGET/home/$USER
+let INITID++
+done
+
+echo $0 OK
+

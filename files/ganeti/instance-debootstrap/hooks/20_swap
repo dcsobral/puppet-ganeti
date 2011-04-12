@@ -1,0 +1,43 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+CUT="/usr/bin/cut"
+SED="/bin/sed"
+CAT="/bin/cat"
+KPARTX="/sbin/kpartx"
+SFDISK="/sbin/sfdisk"
+MKSWAP="/sbin/mkswap"
+SYNC="/bin/sync"
+
+# Swap configuration
+if [ -n "$DISK_1_PATH" ]
+then
+	LINK=`readlink $DISK_1_PATH`
+	if [ -n "$LINK" ]
+	then
+		$SFDISK -L $LINK <<-EOF
+		,,S
+		EOF
+		$ECHO PART=/dev/mapper/"$KPARTX -l $LINK | $CUT -d ' ' -f 1" >>$TARGET/debug.swap
+		$ECHO `$KPARTX -l $LINK` >>$TARGET/debug.swap
+		PART=/dev/mapper/`$KPARTX -l $LINK | $CUT -d ' ' -f 1`
+		$KPARTX -av $LINK >>$TARGET/debug.swap
+		SWAP=`$MKSWAP $PART`
+		${SYNC}
+		sleep 2
+		$KPARTX -dv $LINK >>$TARGET/debug.swap
+		SWAPUUID=`$ECHO $SWAP | $SED -ne '/UUID/ s/.*\(UUID=.*\)/\1/p'`
+		$ECHO $LINK >>$TARGET/debug.swap
+		$ECHO $PART >>$TARGET/debug.swap
+		$ECHO $SWAP >>$TARGET/debug.swap
+		$ECHO SWAPUUID="$MKSWAP $PART | $SED -ne '/UUID/ s/.*\(UUID=.*\)/\1/p'" >>$TARGET/debug.swap
+		$CAT <<-EOF >>$TARGET/etc/fstab
+			$SWAPUUID   none               swap    0       0
+		EOF
+	fi
+fi
+
+echo $0 OK
+

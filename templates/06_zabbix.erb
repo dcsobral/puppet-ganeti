@@ -1,0 +1,24 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+SED="/bin/sed"
+AWK="/usr/bin/awk"
+TR="/usr/bin/tr"
+
+ZABBIX="$TARGET/etc/zabbix/zabbix_agent.conf"
+ZABBIX1="$TARGET/etc/zabbix/zabbix_agentd.conf"
+ZABBIX2=$($ECHO $INSTANCE_NAME | $AWK -F . '{print $1}' | $TR "[:lower:]" "[:upper:]")
+ZABBIX3="Hostname=$ZABBIX2"
+
+# Zabbix Configs
+
+ZABBIX2=$($ECHO $INSTANCE_NAME | $AWK -F . '{print $1}' | $TR "[:lower:]" "[:upper:]")
+ZABBIX3="Hostname=$ZABBIX2"
+$SED -i '{s#Server=localhost#Server=<%= zabbixserver %>#}' $ZABBIX
+$SED -i '{s#Server=localhost#Server=<%= zabbixserver %>#}' $ZABBIX1
+$SED -i "{s#Hostname=localhost#Hostname=${ZABBIX2}#}" $ZABBIX1
+
+echo $0 OK
+

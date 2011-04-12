@@ -1,0 +1,14 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+CAT="/bin/cat"
+TIMEZONE="America/Sao_Paulo"
+
+# Timezone
+$ECHO $TIMEZONE >  $TARGET/etc/timezone
+$CAT $TARGET/usr/share/zoneinfo/$TIMEZONE > $TARGET/etc/localtime
+
+echo $0 OK
+

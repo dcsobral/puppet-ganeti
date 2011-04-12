@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SED="/bin/sed"
+INITTAB="$TARGET/etc/inittab"
+
+$SED -i '{s#1:2345:respawn:/sbin/getty 38400 tty1#1:2345:respawn:/sbin/getty 38400 hvc0#}' $INITTAB
+
+echo $0 OK
+
