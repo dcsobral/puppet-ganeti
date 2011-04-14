@@ -1,0 +1,11 @@
+#!/bin/bash
+# File managed by Puppet
+# DO NOT MODIFY!
+
+ECHO="/bin/echo"
+
+# Sysctl configuration for clocksource problem resolution
+$ECHO "xen.independent_wallclock=0" >> $TARGET/etc/sysctl.conf
+
+echo $0 OK
+

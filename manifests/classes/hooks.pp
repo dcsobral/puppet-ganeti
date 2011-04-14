@@ -11,8 +11,16 @@ class ganeti::hooks {
             replace => true,
             force   => true,
             purge   => true,
-            ignore  => '.git',
+            ignore  => [ '.git', '.swp', ],
+            notify  => Exec['remover cache ganeti'],
     }
+
+    # Purge cache files after modify hooks
+    exec { '/bin/rm -f /var/cache/ganeti-instance-debootstrap/cache-squeeze-amd64.tar':
+        refreshonly => true,
+        alias       => 'remover cache ganeti',
+    }
+
 
     # Templated files
     # Require dnssearch and nameservers
@@ -22,6 +30,7 @@ class ganeti::hooks {
         owner   => 'root',
         group   => 'root',
         mode    => 755,
+        notify  => Exec['remover cache ganeti'],
     }
 
     # Require zabbixserver
@@ -31,6 +40,7 @@ class ganeti::hooks {
         owner   => 'root',
         group   => 'root',
         mode    => 755,
+        notify  => Exec['remover cache ganeti'],
     }
 
     # Generate users and passwords for administrators based on the file used by the users module
@@ -43,6 +53,7 @@ class ganeti::hooks {
         owner   => 'root',
         group   => 'root',
         mode    => 644,
+        notify  => Exec['remover cache ganeti'],
     }
 
     file { '/etc/ganeti/instance-debootstrap/hooks/passwords':
@@ -51,6 +62,7 @@ class ganeti::hooks {
         owner   => 'root',
         group   => 'root',
         mode    => 644,
+        notify  => Exec['remover cache ganeti'],
     }
 }
 
